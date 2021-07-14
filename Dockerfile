@@ -1,10 +1,7 @@
-FROM oxys/alpine-docker-cron:latest
+FROM alpine:latest
 
-RUN apk update && apk add openssh bash
+COPY ./scripts/* /etc/periodic/hourly
 
-ADD run.sh /run.sh
-ADD entrypoint.sh /entrypoint.sh
+RUN apk update && apk add openssh bash mariadb-client
 
-RUN chmod +x /run.sh /entrypoint.sh
-
-ENTRYPOINT /entrypoint.sh
+RUN chmod a+x /etc/periodic/hourly/*

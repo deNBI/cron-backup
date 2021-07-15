@@ -1,9 +1,13 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
-COPY ./scripts/* /etc/periodic/15min
+ADD ./scripts/mysql-cron /etc/cron.d/mysql-cron
+ADD ./scripts/mysql_backup.sh /etc/mysqlcron/mysql_backup.sh
 
-RUN apk update && apk add openssh bash mariadb-client
+RUN chmod 0644 /etc/cron.d/mysql-cron
 
-RUN chmod a+x /etc/periodic/15min/*
+RUN touch /var/log/cron.log
 
-CMD rc-service crond start && rc-update add crond && tail -f /var/log/cron.log
+RUN apt update
+RUN apt install cron
+
+CMD cron && tail -f /var/log/cron.log

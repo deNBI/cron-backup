@@ -9,5 +9,6 @@ run chmod +x /etc/mysqlcron/mysql_backup.sh
 RUN apt update
 RUN apt install -y cron
 RUN apt install -y mariadb-client
+RUN crontab /etc/cron.d/crontab
 
 CMD cron -f 

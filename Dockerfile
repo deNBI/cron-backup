@@ -8,7 +8,7 @@ ADD ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
 ADD ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
 ADD ./scripts/$SCRIPTS_FOLDER /etc/cronscripts/
 
-RUN export PACKAGES=$(cat packages.txt)
+RUN export PACKAGES=$(cat /etc/pkginstall/packages.txt)
 RUN apk update && apk add $PACKAGES
 
 RUN chmod +x /etc/cronscripts/*

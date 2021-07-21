@@ -1,12 +1,12 @@
 FROM alpine:3.14.0
 
-ENV CRONTAB_FILE=$CRONTAB_FILE
-ENV SCRIPTS_FOLDER=$SCRIPTS_FOLDER
-ENV PACKAGES_FILE=$PACKAGES_FILE
+ARG CRONTAB_FILE
+ARG SCRIPTS_FOLDER
+ARG PACKAGES_FILE
 
-COPY ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
-COPY ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
-COPY ./scripts/$SCRIPTS_FOLDER /etc/cronscripts/
+COPY ./packages/${PACKAGES_FILE} /etc/pkginstall/packages.txt
+COPY ./crontabs/${CRONTAB_FILE} /etc/crontabs/dockercron
+COPY ./scripts/${SCRIPTS_FOLDER} /etc/cronscripts/
 
 RUN export PACKAGES=$(cat /etc/pkginstall/packages.txt)
 RUN apk update && apk add $PACKAGES

@@ -1,14 +1,18 @@
-FROM ubuntu:latest
+FROM alpine:3.14.0
 
-ADD ./scripts/mysql-cron /etc/cron.d/crontab
-ADD ./scripts/mysql_backup.sh /etc/mysqlcron/mysql_backup.sh
+ARG CRONTAB_FILE
+ARG SCRIPTS_FOLDER
+ARG PACKAGES_FILE
 
-RUN chmod 0644 /etc/cron.d/crontab
-RUN chmod +x /etc/mysqlcron/mysql_backup.sh
+ADD ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
+ADD ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
+ADD ./scripts/$SCRIPTS_FOLDER /etc/cronscripts
 
-RUN apt update
-RUN apt install -y cron
-RUN apt install -y mariadb-client
-RUN crontab /etc/cron.d/crontab
+RUN export PACKAGES=$(cat packages.txt)
+RUN apk update && apk add $PACKAGES
 
-CMD cron -f 
+RUN chmod +x /etc/cronscripts/*
+
+RUN crontab /etc/crontabs/dockercron
+
+CMD ['crond' '-f']

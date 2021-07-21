@@ -5,7 +5,7 @@ ENV SCRIPTS_FOLDER=$SCRIPTS_FOLDER
 ENV PACKAGES_FILE=$PACKAGES_FILE
 
 ADD ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
-ADD ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
+COPY ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
 ADD ./scripts/$SCRIPTS_FOLDER /etc/cronscripts/
 
 RUN export PACKAGES=$(cat /etc/pkginstall/packages.txt)

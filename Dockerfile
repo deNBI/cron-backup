@@ -1,7 +1,7 @@
 FROM alpine:3.14.0
 
 ARG CRONTAB_FILE=mysql-cron
-ARG SCRIPTS_FOLDER=./scripts/mysqlbackup
+ARG SCRIPTS_FOLDER=mysqlbackup
 ARG PACKAGES_FILE=mysqlbackup.txt
 
 COPY ./packages/${PACKAGES_FILE} /etc/pkginstall/packages.txt

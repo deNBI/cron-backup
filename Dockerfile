@@ -15,4 +15,4 @@ RUN chmod +x /etc/cronscripts/*
 
 RUN crontab /etc/crontabs/dockercron
 
-CMD ['crond' '-f']
+CMD crond

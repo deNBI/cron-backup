@@ -4,9 +4,9 @@ ENV CRONTAB_FILE=$CRONTAB_FILE
 ENV SCRIPTS_FOLDER=$SCRIPTS_FOLDER
 ENV PACKAGES_FILE=$PACKAGES_FILE
 
-ADD ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
+COPY ./packages/$PACKAGES_FILE /etc/pkginstall/packages.txt
 COPY ./crontabs/$CRONTAB_FILE /etc/crontabs/dockercron
-ADD ./scripts/$SCRIPTS_FOLDER /etc/cronscripts/
+COPY ./scripts/$SCRIPTS_FOLDER /etc/cronscripts/
 
 RUN export PACKAGES=$(cat /etc/pkginstall/packages.txt)
 RUN apk update && apk add $PACKAGES

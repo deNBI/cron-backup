@@ -1,0 +1,11 @@
+FROM denbicloud/cron-backup
+
+RUN apk add mariadb-client
+
+COPY ./crontabs/mysqron /etc/crontabs/dockercron
+
+COPY ./scripts/mysqbackup/mysql_backup.sh /etc/cronscripts/mysql_backup.sh
+
+RUN crontab /etc/crontabs/dockercron
+
+CMD crond -f -l 2

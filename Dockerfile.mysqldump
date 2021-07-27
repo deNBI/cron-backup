@@ -8,4 +8,4 @@ COPY ./scripts/mysqbackup/mysql_backup.sh /etc/cronscripts/mysql_backup.sh
 
 RUN crontab /etc/crontabs/dockercron
 
-CMD crond -f -l 2
+CMD crond -f -l 2s

@@ -1,16 +1,34 @@
 # Cron-Backup
 
 Containered cron jobs based on an [Alpine Linux image](https://hub.docker.com/_/alpine). 
+This image offers a minimal base image with a shell script to prepare and run cron jobs.
+To use this you need to create:
 
-Depending on the specific backup usecase, the corresponding crontabs and scripts can be mounted in the container. For this, the following environment variables must be adjusted in the parent docker-compose.yml: 
+1. A install-packages.sh:  
+   A shell script which installs the dependencies you need.
 
-* `BACKUP_OUTPUT_PATH`: Defines the path where the backup-folder of the container get's mounted on.
-* `CRONTAB_FILE`: Defines the file in the repository where the cronjobs for the specific container are listed.
-* `SCRIPTS_FOLDER`: Defines the folder in the repository, in which the scripts for the specific container are laying. 
-* `PACKAGES_FILE`: Defines the package file in the repository, where all packages are listed which need to be installed via `apk add` for the specific use case of the container.
+2. A cronscript:  
+   A script which runs the steps to backup your data.
 
-Specific containers may also needs other variables, which are listed below:
+3. A crontab:  
+   A crontab when to run your cronscript. This image offers a log file (located under /var/log/cron.log) to which you 
+   may log your output, which is used by directing all output to stdout 
+   (i.e. * * * * * /mycronscript >> /var/log/cron.log 2>&1).
 
-*Limesurvey Database Backup*   
+Next use this image with your docker-compose.yml (here an exmaple for a limesurvey/mysql backup container):
 
-* `LIMESURVEY_DB_PASSWORD`: Password to connect to the database in the corresponding container.
+```
+  limesurvey_backup:
+      container_name: limesurvey_backup
+      image: denbicloud/cron-backup
+      volumes:
+        - ./config/cron/limesurvey/install-packages.sh:/install-packages.sh
+        - ./config/cron/limesurvey/mysql-backup.sh:/etc/cronscripts/mysql-backup.sh
+        - ./config/cron/limesurvey/mysql-cron:/etc/crontabs/dockercron/mysql-cron
+        - ${general_PERSISTENT_PATH}backup/limesurvey:/etc/backup
+      environment:
+        - LIMESURVEY_DB_PASSWORD
+      networks:
+        - portal
+      command: "bash /prepare-cron.sh && crond -b -l 6 && tail -f /var/log/cron.log"
+```

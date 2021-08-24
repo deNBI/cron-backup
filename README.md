@@ -14,8 +14,16 @@ To use this you need to create:
    A crontab when to run your cronscript. This image offers a log file (located under /var/log/cron.log) to which you 
    may log your output, which is used by directing all output to stdout 
    (i.e. * * * * * /mycronscript >> /var/log/cron.log 2>&1).
+   
+4. This image supports backup rotation, therefore the BACKUP_ENABLED=true environemnt variable must be set.
+   Following env variables must/can be set:
+   
+   * BACKUP_ROTATION_ENABLED - must be set to true to activate the Backup Rotation
+   * BACKUP_ROTATION_MAX_SIZE - Max Size of Backup folder (default 2)
+   * BACKUP_ROTATION_CUT_SIZE - Size to which the folder will be trimmed (default 1)
+   * BACKUP_ROTATION_SIZE_TYPE - Type of the Size ( default GiB - possible Types MB MiB GB GiB TB TiB)
 
-Next use this image with your docker-compose.yml (here an exmaple for a limesurvey/mysql backup container):
+Next use this image with your docker-compose.yml (here an example for a limesurvey/mysql backup container):
 
 ```
   limesurvey_backup:
@@ -28,7 +36,10 @@ Next use this image with your docker-compose.yml (here an exmaple for a limesurv
         - ${general_PERSISTENT_PATH}backup/limesurvey:/etc/backup
       environment:
         - LIMESURVEY_DB_PASSWORD
+        - BACKUP_ROTATION_ENABLED=true
+        - BACKUP_ROTATION_MAX_SIZE=10
+        - BACKUP_ROTATION_CUT_SIZE=5
+        - BACKUP_ROTATION_SIZE_TYPE=GiB
       networks:
         - portal
-      command: "bash /prepare-cron.sh && crond -b -l 6 && tail -f /var/log/cron.log"
 ```

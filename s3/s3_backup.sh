@@ -5,7 +5,7 @@ basedir="/etc/backup"
 s3path=$S3_PATH
 
 
-
+s3cmd mb s3://$S3_PATH
 cd $basedir
 
 if [ ! -d "$S3_HASHDIR" ]
@@ -23,7 +23,7 @@ do
 
         if [ "$filehash" != "$storedhash" ]
         then
-                /usr/bin/s3cmd put -e $a s3://$s3path/$a
+                s3cmd put -e $a s3://$S3_PATH/$a
                 echo "storedhash='$filehash'" > "$S3_HASHDIR/$fnamehash"
         else
                 # Hashes match, no need to push

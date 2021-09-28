@@ -27,7 +27,7 @@ base image with a shell script to prepare and run cron jobs. To use this you nee
     - S3_BACKUP_ENABLED=true - must be set to true to activate S3 Backup
     - S3_PATH - the Name of the Container which will be created in OpenStack (global - can be overwritten per site.cfg)
     - S3_ENCRYPT_PASSPHRASE - Set for encryption (global - can be overwritten per site.cfg)
-    - S3_CONFIGS_DIR - Directory of the different site configs with variables see below (should be mounted)
+    - S3_CONFIGS_PATH - Directory of the different site configs with variables see below (should be mounted)
 
    In addition, a cfg must be specified for each site to which the backups are to be pushed - with the following content [example](s3/configs/example.site.cfg):
 

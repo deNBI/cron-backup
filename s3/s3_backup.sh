@@ -4,8 +4,9 @@
 basedir="/etc/backup"
 s3path=$S3_PATH
 
-find  $S3_CONFIG_DIR  -type f  -name "*.cfg"| while read -r a; do
+find  $S3_CONFIGS_PATH  -type f  -name "*.cfg"| while read -r a; do
   echo "$a"
+
   . $a
 
   s3cmd mb s3://$S3_PATH

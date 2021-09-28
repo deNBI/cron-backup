@@ -8,7 +8,8 @@ find  $S3_CONFIGS_PATH  -type f  -name "*.cfg"| while read -r a; do
   echo "$a"
 
   . $a
-
+  echo $S3_ACCESS_KEY
+  done
   s3cmd mb s3://$S3_PATH
   cd $basedir
 
@@ -25,7 +26,9 @@ find  $S3_CONFIGS_PATH  -type f  -name "*.cfg"| while read -r a; do
 
     if [ "$filehash" != "$storedhash" ]; then
       s3cmd put -e $a s3://$S3_PATH/$a
+      if [ $? -eq 0]; then
       echo "storedhash='$filehash'" >"$S3_HASHDIR/$fnamehash"
+      fi
     else
       # Hashes match, no need to push
       echo "$a unchanged, skipping......"

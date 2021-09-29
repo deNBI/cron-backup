@@ -25,20 +25,17 @@ base image with a shell script to prepare and run cron jobs. To use this you nee
 5. This image supports pushing the backups encrypted to S3 Storage. Following env variables must be set:
 
     - S3_BACKUP_ENABLED=true - must be set to true to activate S3 Backup
-    - S3_PATH - the Name of the Container which will be created in OpenStack (global)
+    - S3_PATH - the Name of the Container which will be created in OpenStack (global - can be overwritten per site.cfg)
     - S3_ENCRYPT_PASSPHRASE - Set for encryption (global - can be overwritten per site.cfg)
     - S3_CONFIGS_PATH - Directory of the different site configs with variables see below (should be mounted)
 
    In addition, a cfg must be specified for each site to which the backups are to be pushed - with the following content [example](s3/configs/example.site.cfg):
 
 ~~~Bash
-[example-site]
-access_key = SITE_SPECIFIC_S3_ACCESS_KEY
-gpg_passphrase = $S3_ENCRYPT_PASSPHRASE 
-host_base = SITE_SPECIFIC_S3_OBJECT_STORAGE_EP
-host_bucket = SITE_SPECIFIC_S3_OBJECT_STORAGE_EP
-secret_key = SITE_SPECIFIC_S3_SECRET_KEY
-
+S3_HASHDIR=DIR   #should be mounted - stores local checksum of pushed non-encrypted files (in S3 they are encrypted thus different checksum)
+S3_OBJECT_STORAGE_EP=SITE_SPECIFIC_OBJECT_STORAGE EP (e.g  openstack.cebitec.uni-bielefeld.de:8080)
+S3_ACCESS_KEY=SITE_SPECIFIC_ACCESS_KEY                
+S3_SECRET_KEY=SITE_SPECIFIC_SECRET_KEY 
 ~~~
 Next use this image with your docker-compose.yml (here an example for a limesurvey/mysql backup container):
 

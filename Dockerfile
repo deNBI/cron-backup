@@ -1,5 +1,5 @@
 FROM python:alpine3.14
-RUN apk add  --no-cache bash gnupg
+RUN apk add  --no-cache bash gnupg fdupes
 RUN pip install s3cmd
 RUN touch /var/log/cron.log
 COPY ./prepare-cron.sh /prepare-cron.sh

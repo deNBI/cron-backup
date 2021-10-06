@@ -45,6 +45,11 @@ find  $S3_CONFIGS_PATH  -type f  -name "*.cfg"| while read -r env_data; do
   find * -type f | while read -r a; do
     if [ ! -f $baseEncryptDir/$a.gpg ]; then
     echo "Encrypting $a"
+    if [[ $a =~ "/" ]]; then
+    dir=$(echo $a | rev | cut -d'/' -f2- | rev)
+
+    mkdir -p $baseEncryptDir/$dir
+    fi
     gpg --batch -o $baseEncryptDir/$a.gpg  -c --passphrase-file $tmp_pass $a
     fi
 

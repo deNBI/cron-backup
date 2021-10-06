@@ -50,6 +50,7 @@ find  $S3_CONFIGS_PATH  -type f  -name "*.cfg"| while read -r env_data; do
 
     mkdir -p $baseEncryptDir/$dir
     fi
+
     gpg --batch -o $baseEncryptDir/$a.gpg  -c --passphrase-file $tmp_pass $a
     fi
 

@@ -1,0 +1,7 @@
+
+SHELL=/bin/bash
+BASH_ENV=/container.env
+
+0 1 * * * bash  /s3_backup.sh  >> /var/log/cron.log 2>&1
+
+

@@ -4,10 +4,14 @@
 s3path=$S3_PATH
 tmp_conf=/root/tmp.cfg
 find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
+  s3path=$S3_PATH
   echo "$env_data"
-
+  config_name=$(basename -- $env_data)
+  site_name="${config_name%.*}"
+  s3path=$s3path/$site_name/
+  echo $s3path
   . "$env_data"
-  echo "Delete Files uploaded more than $S3_BACKUP_ROTATION_TIME_LIMIT ago..."
+  echo "Delete Files uploaded more than $S3_BACKUP_ROTATION_TIME_LIMIT days ago..."
   rm -f "$tmp_conf"
 
   touch "$tmp_conf"

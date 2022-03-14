@@ -33,9 +33,11 @@ find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
       if [ $fileName != "" ]; then
         printf 'Deleting "%s" in S3 \n' $fileName
         s3cmd -c "$tmp_conf" del "$fileName"
-        printf 'Also Deleting local encrypted/unencrypted file if still exists'
-        rm -f $baseEncryptDir/$fileName
-        unencryptedFile=/etc/unencrypted/$fileName
+        pureFileName=$(echo "$fileName" | awk -F'/' ' { print $NF } ')
+
+        printf 'Also Deleting local encrypted "%s" file if still exists\n' $pureFileName
+        rm -f $baseEncryptDir/$pureFileName
+        unencryptedFile=/etc/unencrypted/$pureFileName
         printf 'Delete local unencrypted file "%s" if it still exists\n' $unencryptedFile
         rm -f ${unencryptedFile%.gpg}
       fi

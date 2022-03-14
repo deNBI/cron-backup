@@ -9,6 +9,7 @@ find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
   config_name=$(basename -- $env_data)
   site_name="${config_name%.*}"
   s3path=$s3path/$site_name/
+  baseEncryptDir="/etc/encrypted/backup/"$site_name
   echo $s3path
   . "$env_data"
   echo "Delete Files uploaded more than $S3_BACKUP_ROTATION_TIME_LIMIT days ago..."
@@ -30,8 +31,16 @@ find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
 
     if [[ $createDate -le $olderThan ]]; then
       if [ $fileName != "" ]; then
-        printf '    Deleting "%s"\n' $fileName
+        printf 'Deleting "%s" in S3 \n' $fileName
         s3cmd -c "$tmp_conf" del "$fileName"
+        pureFileName=$(echo "$fileName" | awk -F'/' ' { print $NF } ')
+
+        printf 'Also Deleting local encrypted "%s" file if still exists\n' $pureFileName
+        rm -f $baseEncryptDir/$pureFileName
+        unencryptedFile=/etc/unencrypted/$pureFileName
+        unencryptedFile=${unencryptedFile%.gpg}
+        printf 'Delete local unencrypted file "%s" if it still exists\n' $unencryptedFile
+        rm -f $unencryptedFile
       fi
 
     else

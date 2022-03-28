@@ -40,7 +40,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           buildargs: BASE_TAG
-          dockerfile: postgresql/Dockerfile
+          workdir: postgresql
+          dockerfile: Dockerfile
           tags: postgresql-${{ steps.get_version.outputs.VERSION }}
 
 

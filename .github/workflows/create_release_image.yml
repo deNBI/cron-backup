@@ -19,16 +19,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile
-          tags: ${{ steps.get_version.outputs.VERSION }}
+          tags: "${{ steps.get_version.outputs.VERSION }}, latest"
 
-      - name: Publish to Registry as latest
-        uses: elgohr/Publish-Docker-Github-Action@master
-        with:
-          name: denbicloud/cron-backup
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: Dockerfile
-          tags: latest
 
   special_builds:
     runs-on: ubuntu-latest
@@ -39,15 +31,6 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - uses: actions/checkout@master
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
-        with:
-          name: denbicloud/cron-backup
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: Dockerfile
-          tags: ${{ steps.get_version.outputs.VERSION }}
-
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         env:

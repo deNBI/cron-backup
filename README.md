@@ -63,3 +63,15 @@ Next use this image with your docker-compose.yml (here an example for a limesurv
       networks:
         - portal
 ```
+
+## Specific Images
+
+### Postgresql
+Needed environment variables:
+~~~Bash
+POSTGRES_HOST
+POSTGRES_PORT
+POSTGRES_USER
+POSTGRES_DB            
+POSTGRES_PASSWORD
+~~~

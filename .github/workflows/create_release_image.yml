@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           buildargs: BASE_TAG
-          workdir: ${{matrix.type}
+          workdir: ${{matrix.type}}
           dockerfile: Dockerfile
           tags: ${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
 

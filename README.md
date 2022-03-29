@@ -75,3 +75,12 @@ POSTGRES_USER
 POSTGRES_DB            
 POSTGRES_PASSWORD
 ~~~
+
+### Mysql (Backups all Databases)
+Needed environment variables:
+
+~~~Bash
+MYSQL_HOST
+MYSQL_USER
+MYSQL_PASSWORD
+~~~

@@ -1,4 +1,4 @@
-FROM python:alpine3.14
+FROM python:alpine3.16
 RUN apk add  --no-cache bash gnupg fdupes
 RUN pip install s3cmd
 RUN touch /var/log/cron.log

@@ -1,5 +1,5 @@
-FROM alpine:3.16
-RUN apk add --no-cache bash gnupg fdupes
+FROM busybox:latest
+RUN apk add --no-cache bash
 RUN apk update && apk add python3 py3-pip
 RUN pip3 install s3cmd
 RUN touch /var/log/cron.log
@@ -11,4 +11,4 @@ COPY ./s3/s3_backup-cron /s3_backup-cron
 COPY ./s3/s3_backup_rotation.sh /s3_backup_rotation.sh
 COPY ./s3/s3_backup_rotation-cron /s3_backup_rotation-cron
 RUN chmod +x /prepare-cron.sh
-ENTRYPOINT ["/prepare-cron.sh", "--dns-opt='options single-request'", "--sysctl", "net.ipv6.conf.all.disable_ipv6=1"]
+ENTRYPOINT ["/prepare-cron.sh"]

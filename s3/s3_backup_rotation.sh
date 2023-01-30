@@ -1,43 +1,46 @@
 #!/bin/bash
 
-# Backup directory specifi
-s3path=$S3_PATH
+# Backup directory specific S3 path
+s3_path=$S3_PATH
 tmp_conf=/root/tmp.cfg
+
 find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
-  s3path=$S3_PATH
-  echo "$env_data"
+  s3_path=$S3_PATH
   config_name=$(basename -- $env_data)
   site_name="${config_name%.*}"
-  s3path=$s3path/$site_name/
-  baseEncryptDir="/etc/encrypted/backup/"$site_name
-  echo $s3path
+  s3_path=$s3_path/$site_name/
+  base_encrypt_dir="/etc/encrypted/backup/$site_name"
+
+  # Load environment data
   . "$env_data"
-  echo "Delete Files uploaded more than $S3_BACKUP_ROTATION_TIME_LIMIT days ago..."
-  rm -f "$tmp_conf"
 
-  touch "$tmp_conf"
-  printf "%s\n" "[default]" >>"$tmp_conf"
-  printf "%s\n" "access_key = $S3_ACCESS_KEY" >>"$tmp_conf"
-  printf "%s\n" "host_base = $S3_OBJECT_STORAGE_EP" >>"$tmp_conf"
-  printf "%s\n" "host_bucket = $S3_OBJECT_STORAGE_EP" >>"$tmp_conf"
-  printf "%s\n" "secret_key = $S3_SECRET_KEY" >>"$tmp_conf"
+  # Create temporary S3 configuration file
+  echo "Creating temporary S3 configuration file at $tmp_conf"
+  echo "[default]" > "$tmp_conf"
+  echo "access_key = $S3_ACCESS_KEY" >> "$tmp_conf"
+  echo "host_base = $S3_OBJECT_STORAGE_EP" >> "$tmp_conf"
+  echo "host_bucket = $S3_OBJECT_STORAGE_EP" >> "$tmp_conf"
+  echo "secret_key = $S3_SECRET_KEY" >> "$tmp_conf"
 
-  s3cmd -c "$tmp_conf" ls s3://$s3path | grep " DIR " -v | while read -r line; do
-    echo "$line"
-    createDate=$(echo $line | awk {'print $1" "$2'})
-    createDate=$(date -d "$createDate" "+%s")
-    olderThan=$(date -d "@$(($(date +%s) - 86400 * $S3_BACKUP_ROTATION_TIME_LIMIT))" +%s)
-    fileName=$(echo $line | awk {'print $4'})
+  # Delete files uploaded more than the specified limit
+  echo "Deleting files uploaded more than $S3_BACKUP_ROTATION_TIME_LIMIT days ago..."
+  s3cmd -c "$tmp_conf" ls "s3://$s3_path" | grep -v " DIR " | while read -r line; do
+    create_date=$(date -d "$(echo $line | awk '{ print $1" "$2 }')" "+%s")
+    older_than=$(date -d "@$(($(date +%s) - 86400 * $S3_BACKUP_ROTATION_TIME_LIMIT))" +%s)
+    file_name=$(echo $line | awk '{ print $4 }')
 
-    if [[ $createDate -le $olderThan ]]; then
-      if [ $fileName != "" ]; then
-        printf 'Deleting "%s" in S3 \n' $fileName
-        s3cmd -c "$tmp_conf" del "$fileName"
-        pureFileName=$(echo "$fileName" | awk -F'/' ' { print $NF } ')
-
-        printf 'Also Deleting local encrypted "%s" file if still exists\n' $pureFileName
-        rm -f $baseEncryptDir/$pureFileName
-        unencryptedFile=/etc/unencrypted/$pureFileName
+    if [[ $create_date -le $older_than ]]; then
+      if [ $file_name != "" ]; then
+        echo "Deleting $file_name in S3"
+        s3cmd -c "$tmp_conf" del "$file_name"
+        pure_file_name=$(echo "$file_name" | awk -F'/' '{ print $NF }')
+        echo "Also deleting local encrypted file $base_encrypt_dir/$pure_file_name if it still exists"
+        rm -f "$base_encrypt_dir/$pure_file_name"
+        unencrypted_file=/etc/unencrypted/$pure_file_name
+      fi
+    fi
+  done
+done
         unencryptedFile=${unencryptedFile%.gpg}
         printf 'Delete local unencrypted file "%s" if it still exists\n' $unencryptedFile
         rm -f $unencryptedFile

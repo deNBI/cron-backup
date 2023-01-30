@@ -1,7 +1,5 @@
 #!/bin/bash
 
-chmod +x /install-packages.sh
-bash /install-packages.sh
 if [ "$BACKUP_ROTATION_ENABLED" == "true" ]; then
   cp /rotate_backup.sh /etc/cronscripts/rotate_backup.sh
   cat /backup-cron >>/etc/crontabs/dockercron/*
@@ -24,4 +22,12 @@ fi
 echo "Cronjob setup done"
 chmod +x /etc/cronscripts/*
 crontab /etc/crontabs/dockercron/*
-crond -b -l 6 && tail -f /var/log/cron.log
+crond -b -l 6
+
+echo "Running install packages"
+
+chmod +x /install-packages.sh
+bash /install-packages.sh
+echo "Packages installed!"
+
+tail -f /var/log/cron.log

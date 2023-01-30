@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     fdupes \
     python3 \
-    python3-pip
+    python3-pip \
+    cron
 
 RUN pip3 install s3cmd
 

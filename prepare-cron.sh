@@ -24,10 +24,13 @@ chmod +x /etc/cronscripts/*
 crontab /etc/crontabs/dockercron/*
 crond -b -l 6
 
-echo "Running install packages"
+if [ -f "/install-packages.sh" ]; then
+  echo "Running install packages"
 
-chmod +x /install-packages.sh
-bash /install-packages.sh
-echo "Packages installed!"
+  chmod +x /install-packages.sh
+  bash /install-packages.sh
+  echo "Packages installed!"
+fi
 
+echo "Starting tail.."
 tail -f /var/log/cron.log

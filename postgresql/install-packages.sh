@@ -1,5 +1,5 @@
 #!/bin/sh
 
-apk update && apk add postgresql14-client
+apt-get update && apt-get install postgresql
 
 echo "Installed dependencies"

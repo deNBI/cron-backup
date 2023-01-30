@@ -1,4 +1,4 @@
 #!/bin/sh
 
-apk update && apk add mariadb-client
+apt-get update && apt-get install mariadb-client
 echo "Installed dependencies"

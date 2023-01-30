@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.17
 RUN apk add --no-cache bash gnupg fdupes
 RUN apk update && apk add python3 py3-pip
 RUN pip3 install s3cmd

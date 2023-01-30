@@ -1,5 +1,8 @@
 ARG BASE_TAG=latest
+ARG DEBIAN_FRONTEND=noninteractive
+
 FROM denbicloud/cron-backup:${BASE_TAG}
+
 
 COPY ./install-packages.sh /install-packages.sh
 COPY ./postgresql-backup.sh /etc/cronscripts/postgresql-backup.sh

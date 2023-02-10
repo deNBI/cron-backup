@@ -19,6 +19,7 @@ if [ "$S3_BACKUP_ENABLED" == "true" ]; then
 
 fi
 
+
 echo "Cronjob setup done"
 chmod +x /etc/cronscripts/*
 crontab /etc/crontabs/dockercron/*

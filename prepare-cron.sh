@@ -9,7 +9,7 @@ fi
 if [ "$S3_BACKUP_ENABLED" == "true" ]; then
   cp /s3_backup.sh /etc/cronscripts/s3_backup.sh
   cat /s3_backup-cron >>/etc/crontabs/dockercron/*
-  declare -p | grep -E 'S3_PATH|S3_HASHDIR|S3_OBJECT_STORAGE_EP|S3_ACCESS_KEY|S3_SECRET_KEY|S3_ENCRYPT_PASSPHRASE' >>/container.env
+  declare -p | grep -E 'S3_PATH|S3_HASHDIR|S3_OBJECT_STORAGE_EP|S3_ACCESS_KEY|S3_SECRET_KEY|S3_ENCRYPT_PASSPHRASE|S3_CONFIGS_PATH' >>/container.env
 
   if [ "$S3_BACKUP_ROTATION_ENABLED" == "true" ]; then
     cp /s3_backup_rotation.sh /etc/cronscripts/s3_backup_rotation.sh

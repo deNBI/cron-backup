@@ -22,7 +22,7 @@ fi
 echo "Cronjob setup done"
 chmod +x /etc/cronscripts/*
 crontab /etc/crontabs/dockercron/*
-crond -b -l 6
+service cron start
 
 if [ -f "/install-packages.sh" ]; then
   echo "Running install packages"

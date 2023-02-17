@@ -75,4 +75,4 @@ find "$S3_CONFIGS_PATH" -type f -name "*.cfg" | while read -r env_data; do
 
   # Remove the temp config and password files
   echo "Removing temp config and password files"
-  rm -f
+  rm -f "$tmp_conf" "$tmp_pass"

@@ -1,13 +1,16 @@
-FROM ubuntu:22.04
+FROM alpine:3.17.2
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
+RUN apk add --update --no-cache \
     bash \
     gnupg \
     fdupes \
     python3 \
-    python3-pip \
-    cron
+    py3-pip \
+    busybox-extras \
+    ssmtp
 
+RUN pip3 install --upgrade pip
 RUN pip3 install s3cmd
 
 RUN touch /var/log/cron.log

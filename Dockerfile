@@ -7,9 +7,8 @@ RUN apt-get update && apt-get install -y \
     fdupes \
     python3 \
     python3-pip \
-    cron \ 
+    cron \
     s3cmd
-
 
 RUN touch /var/log/cron.log
 
@@ -24,3 +23,4 @@ COPY ./s3/s3_backup_rotation-cron /s3_backup_rotation-cron
 RUN chmod +x /prepare-cron.sh
 
 ENTRYPOINT ["/prepare-cron.sh"]
+

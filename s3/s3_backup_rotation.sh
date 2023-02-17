@@ -37,18 +37,14 @@ find $S3_CONFIGS_PATH -type f -name "*.cfg" | while read -r env_data; do
         echo "Also deleting local encrypted file $base_encrypt_dir/$pure_file_name if it still exists"
         rm -f "$base_encrypt_dir/$pure_file_name"
         unencrypted_file=/etc/unencrypted/$pure_file_name
-      fi
-    fi
-  done
-done
-        unencryptedFile=${unencryptedFile%.gpg}
-        printf 'Delete local unencrypted file "%s" if it still exists\n' $unencryptedFile
-        rm -f $unencryptedFile
-      fi
 
+        if [[ -f $unencrypted_file ]]; then
+          echo "Deleting $unencrypted_file if it still exists"
+          rm -f $unencrypted_file
+        fi
+      fi
     else
-      echo "   File $fileName still valid"
-
+      echo "   File $file_name still valid"
     fi
   done
 

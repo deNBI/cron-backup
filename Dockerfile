@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     fdupes \
     python3 \
     python3-pip \
-    cron \ s3cmd
+    cron \ 
+    s3cmd
 
 
 RUN touch /var/log/cron.log

@@ -20,10 +20,7 @@ if [ "$S3_BACKUP_ENABLED" == "true" ]; then
 fi
 
 
-echo "Cronjob setup done"
-chmod +x /etc/cronscripts/*
-crontab /etc/crontabs/dockercron/*
-service cron start
+
 
 if [ -f "/install-packages.sh" ]; then
   echo "Running install packages"
@@ -33,5 +30,9 @@ if [ -f "/install-packages.sh" ]; then
   echo "Packages installed!"
 fi
 
-echo "Starting tail.."
-tail -f /var/log/cron.log
+chmod +x /etc/cronscripts/*
+crontab /etc/crontabs/dockercron/*
+echo "Cronjob setup done"
+
+echo "Starting crond and tail"
+crond -b -l 6 && tail -f /var/log/cron.log

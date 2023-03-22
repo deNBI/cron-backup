@@ -42,4 +42,4 @@ jobs:
         with:
           file: Dockerfile
           push: true
-          tags: denbicloud/cron-backup:${{ steps.tag.outputs.TAG }}
+          tags: quay.io/denbicloud/cron-backup:${{ steps.tag.outputs.TAG }}

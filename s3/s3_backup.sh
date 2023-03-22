@@ -7,7 +7,9 @@ tmp_conf="/root/tmp.cfg"
 tmp_pass="/root/pass.txt"
 
 # Create the unencrypted copy directory
-rm -rf "$unencrypted_copy/*"
+echo "Clearing old unencrypted data"
+
+find "$unencrypted_copy/" -type f -delete
 echo "Creating unencrypted  directory"
 mkdir -p "$unencrypted_copy"
 echo "Copy data"

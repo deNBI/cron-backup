@@ -14,14 +14,21 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - uses: actions/checkout@master
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Quay.io
+        uses: docker/login-action@v2
         with:
-          name: denbicloud/cron-backup
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: Dockerfile
-          tags: "${{ steps.get_version.outputs.VERSION }}, latest"
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+      - name: Build and publish image to Quay
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile
+          push: true
+          tags: denbicloud/cron-backup:${{ steps.get_version.outputs.VERSION }}, denbicloud/cron-backup:latest
 
 
   special_builds:
@@ -37,17 +44,24 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - uses: actions/checkout@master
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Quay.io
+        uses: docker/login-action@v2
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+      - name: Build and publish image to Quay
+        uses: docker/build-push-action@v4
         env:
           BASE_TAG: ${{ steps.get_version.outputs.VERSION }}
         with:
-          name: denbicloud/cron-backup
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildargs: BASE_TAG
-          workdir: ${{matrix.type}}
-          dockerfile: Dockerfile
-          tags: ${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
+          file: ${{matrix.type}}/Dockerfile
+          push: true
+          tags: denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
+		      build-args: BASE_TAG
+
 
 

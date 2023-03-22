@@ -33,7 +33,7 @@ jobs:
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
+          password: ${{ secrets.QUAY_TOKEN }}
       - name: Build and publish image to Quay
         uses: docker/build-push-action@v4
         with:

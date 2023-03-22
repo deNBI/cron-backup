@@ -27,11 +27,12 @@ jobs:
         id: tag
       - name: Get tag
         run: echo "The selected tag is ${{ steps.tag.outputs.TAG }}"
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@v4
+      - name: Build and publish image to Quay
+        uses: docker/build-push-action@v4
         with:
-          name: quay.io/denbicloud/cron-backup
-          username: ${{ secrets.QUOAY_USERNAME }}
-          password: ${{ secrets.QUOAY_TOKEN }}
-          dockerfile: Dockerfile
+          path: Dockerfile
+          registry: quay.io
+          repository: denbicloud/cron-backup
+          username: ${{ secrets.QUOAY_USERNAME  }}
+          password: ${{ secrets.QUOAY_TOKEN  }}
           tags: ${{ steps.tag.outputs.TAG }}

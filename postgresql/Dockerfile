@@ -1,7 +1,7 @@
 ARG BASE_TAG=latest
 ARG DEBIAN_FRONTEND=noninteractive
 
-FROM denbicloud/cron-backup:${BASE_TAG}
+FROM quay.io/denbicloud/cron-backup:${BASE_TAG}
 
 
 COPY ./install-packages.sh /install-packages.sh

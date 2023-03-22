@@ -30,8 +30,8 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: denbicloud/cron-backup
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          name: quay.io/denbicloud/cron-backup
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
           dockerfile: Dockerfile
           tags: ${{ steps.tag.outputs.TAG }}

@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [ postgresql, mysql ]
+        type: [ postgresql, mysql, mongodb ]
     steps:
 
       - name: Get the version

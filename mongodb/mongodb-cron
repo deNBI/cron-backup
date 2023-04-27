@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+BASH_ENV=/container.env
+0 */4 * * * /etc/cronscripts/mongodb-backup.sh >> /var/log/cron.log 2>&1
+# Don't remove the empty line at the end of this file. It is required to run the cron job

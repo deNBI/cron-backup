@@ -59,6 +59,7 @@ jobs:
           BASE_TAG: ${{ steps.get_version.outputs.VERSION }}
         with:
           file: ${{matrix.type}}/Dockerfile
+          context: ${{matrix.type}}
           push: true
           build-args: BASE_TAG
           tags: quay.io/denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}

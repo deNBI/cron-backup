@@ -3,6 +3,7 @@ echo "Starting backup script"
 
 basedir="/etc/backup"
 unencrypted_copy="/etc/unencrypted"
+baseEncryptDir="/etc/encrypted"
 tmp_conf="/root/tmp.cfg"
 tmp_pass="/root/pass.txt"
 
@@ -19,8 +20,9 @@ cp --verbose -a "$basedir/." "$unencrypted_copy"
 # Remove duplicate files
 echo "Removing duplicate files"
 fdupes -qdiN -r "$unencrypted_copy"
+echo "Clearing old encrypted data"
 
-baseEncryptDir="/etc/encrypted"
+find "$baseEncryptDir/" -type f -delete
   # Create the encrypted backup directory
 echo "Creating encrypted backup directory"
 mkdir -p "$baseEncryptDir"

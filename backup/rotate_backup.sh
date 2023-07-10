@@ -1,6 +1,10 @@
 #!/bin/bash
 
-echo "Starting Backup Rotation Script"
+log() {
+  echo "[$(date +"%Y-%m-%d %H:%M:%S")] - $1"
+}
+
+log "Starting Backup Rotation Script"
 BACKUP_ROTATION_SIZE_TYPE="${BACKUP_ROTATION_SIZE_TYPE:=GiB}"
 BACKUP_ROTATION_SIZE_TYPE_OPTIONS=(MB MiB GB GiB TB TiB)
 DIRECTORY="/etc/backup"
@@ -18,12 +22,12 @@ done
 type_exists=$(echo "${BACKUP_ROTATION_SIZE_TYPE_OPTIONS[@]}" | grep -o $BACKUP_ROTATION_SIZE_TYPE | wc -w)
 
 if [ "$type_exists" -ne "1" ]; then
-  echo "Size Type [$BACKUP_ROTATION_SIZE_TYPE] Not Valid - Valid Types: ${BACKUP_ROTATION_SIZE_TYPE_OPTIONS[*]}"
+  log "Size Type [$BACKUP_ROTATION_SIZE_TYPE] Not Valid - Valid Types: ${BACKUP_ROTATION_SIZE_TYPE_OPTIONS[*]}"
   exit
 fi
 
 if [ "$BACKUP_ROTATION_CUT_SIZE" -gt "$BACKUP_ROTATION_MAX_SIZE" ]; then
-  echo "Cutsize [$BACKUP_ROTATION_CUT_SIZE] can not be bigger than Maxsize [$BACKUP_ROTATION_MAX_SIZE]!"
+  log "Cutsize [$BACKUP_ROTATION_CUT_SIZE] can not be bigger than Maxsize [$BACKUP_ROTATION_MAX_SIZE]!"
   exit
 fi
 
@@ -44,32 +48,31 @@ dehumanise() {
   done
 }
 
-echo "Backup Directory: $DIRECTORY"
+log "Backup Directory: $DIRECTORY"
 BACKUP_ROTATION_MAX_SIZE_BYTES=$(dehumanise $BACKUP_ROTATION_MAX_SIZE$BACKUP_ROTATION_SIZE_TYPE)
 BACKUP_ROTATION_CUT_SIZE_BYTES=$(dehumanise $BACKUP_ROTATION_CUT_SIZE$BACKUP_ROTATION_SIZE_TYPE)
-echo "MaxSize: $BACKUP_ROTATION_MAX_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_MAX_SIZE_BYTES Bytes)"
-echo "Cutsize: $BACKUP_ROTATION_CUT_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_CUT_SIZE_BYTES Bytes)"
+log "MaxSize: $BACKUP_ROTATION_MAX_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_MAX_SIZE_BYTES Bytes)"
+log "Cutsize: $BACKUP_ROTATION_CUT_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_CUT_SIZE_BYTES Bytes)"
 
 # Check Size of BACKUP_ROTATION_DIR
 CURRENT_SIZE_KBYTES=$(du -ks "$DIRECTORY" | cut -f1)
 CURRENT_SIZE_BYTES=$((CURRENT_SIZE_KBYTES * 1024))
-echo "Current Size: $CURRENT_SIZE_BYTES  Bytes)"
+log "Current Size: $CURRENT_SIZE_BYTES Bytes"
 
 if [ $CURRENT_SIZE_BYTES -gt $BACKUP_ROTATION_MAX_SIZE_BYTES ]; then
-  echo "Maximum Size $BACKUP_ROTATION_MAX_SIZE_BYTES exceeded - Current Size  $CURRENT_SIZE_BYTES"
+  log "Maximum Size $BACKUP_ROTATION_MAX_SIZE_BYTES exceeded - Current Size $CURRENT_SIZE_BYTES"
 
   while [ $CURRENT_SIZE_BYTES -gt $BACKUP_ROTATION_CUT_SIZE_BYTES ]; do
-    echo "Cut Size $BACKUP_ROTATION_CUT_SIZE_BYTES exceeded - Current Size  $CURRENT_SIZE_BYTES"
+    log "Cut Size $BACKUP_ROTATION_CUT_SIZE_BYTES exceeded - Current Size $CURRENT_SIZE_BYTES"
     CURRENT_SIZE_KBYTES=$(du -ks "$DIRECTORY" | cut -f1)
     CURRENT_SIZE_BYTES=$((CURRENT_SIZE_KBYTES * 1024))
-    echo "Current Size: $CURRENT_SIZE_BYTES  Bytes"
+    log "Current Size: $CURRENT_SIZE_BYTES Bytes"
     oldest_file=$DIRECTORY/$(ls -t $DIRECTORY | tail -1)
-    echo "Delete oldest Backup: $oldest_file"
+    log "Delete oldest Backup: $oldest_file"
     rm $oldest_file
   done
-  echo "Current size lower than cut size"
+  log "Current size lower than cut size"
 
 else
-  echo "Maximum size not yet reached"
-
+  log "Maximum size not yet reached"
 fi

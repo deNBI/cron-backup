@@ -1,8 +1,12 @@
 #!/bin/sh
 
+log() {
+  echo "[$(date +"%Y-%m-%d %H:%M:%S")] - $1"
+}
+
 NOW=$(date '+%y-%m-%d-%H%M')
 FILE=/etc/backup/${MONGODB_DB}-${NOW}.dump.gz
-echo "Create Backup $FILE"
+log "Create Backup $FILE"
 
 if [ -n "$MONGODB_USER" ] && [ -n "$MONGODB_PASSWORD" ]; then
   URI="mongodb+srv://$MONGODB_USER:$MONGODB_PASSWORD@$MONGODB_HOST"

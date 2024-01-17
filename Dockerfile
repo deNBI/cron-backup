@@ -5,13 +5,9 @@ RUN apk add --update --no-cache \
     bash \
     gnupg \
     fdupes \
-    python3 \
-    py3-pip \
+    s3cmd \
     busybox-extras \
     ssmtp
-
-RUN pip3 install --upgrade pip
-RUN pip3 install s3cmd
 
 RUN touch /var/log/cron.log
 

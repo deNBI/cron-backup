@@ -53,10 +53,22 @@ jobs:
           type: [ postgresql, mysql, mongodb ]
       steps:
 
-        - name: Get the version
-          id: get_version
-          run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        - name: Workflow run cleanup action
+          uses: rokroskar/workflow-run-cleanup-action@v0.3.3
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         - uses: actions/checkout@master
+        - name: Extract branch name
+          shell: bash
+          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          id: extract_branch
+
+        - name: Set tag
+          run: sed 's/\//-/g'  <<< "::set-output name=TAG::${{ steps.extract_branch.outputs.branch }}"
+          id: tag
+        - name: Get tag
+          run: echo "The selected tag is ${{ steps.tag.outputs.TAG }}"
+
         -
           name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3
@@ -75,4 +87,4 @@ jobs:
             context: ${{matrix.type}}
             push: true
             build-args: BASE_TAG
-            tags: quay.io/denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
+            tags: quay.io/denbicloud/cron-backup:${{matrix.type}}-${{ steps.tag.outputs.TAG }}

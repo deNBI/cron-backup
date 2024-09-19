@@ -81,7 +81,7 @@ jobs:
         - name: Build and publish image to Quay
           uses: docker/build-push-action@v5
           env:
-            BASE_TAG: ${{ steps.get_version.outputs.VERSION }}
+            BASE_TAG: ${{ steps.tag.outputs.TAG }}
           with:
             file: ${{matrix.type}}/Dockerfile
             context: ${{matrix.type}}

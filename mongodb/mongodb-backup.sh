@@ -3,6 +3,7 @@
 log() {
   echo "[$(date +"%Y-%m-%d %H:%M:%S")] - $1"
 }
+trap 'log "Error occurred, exiting script"; exit 1' ERR
 
 NOW=$(date '+%y-%m-%d-%H%M')
 FILE="/etc/backup/${MONGODB_DB}-${NOW}.dump.gz"
@@ -18,3 +19,14 @@ fi
 MONGODB_HOST=$(echo "$MONGODB_HOST" | cut -d: -f1)
 
 mongodump --archive="$FILE" --gzip --uri="$URI"
+
+# Check if the backup file is not empty and has a reasonable size
+MIN_SIZE=$((1024 * 10)) # 10KB minimum size
+if [ ! -s "$FILE" ] || [ $(stat -c%s "$FILE") -lt $MIN_SIZE ]; then
+  log "Backup file $FILE is too small (${MIN_SIZE}B required), aborting script"
+  exit 1
+fi
+
+/notify_uptime_kuma.sh || log "Failed to send notification"
+
+log "Backup completed successfully"

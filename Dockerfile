@@ -11,8 +11,8 @@ RUN apk add --update --no-cache \
     busybox-extras \
     ssmtp
 
-RUN pip3 install --upgrade pip
-RUN pip3 install s3cmd
+RUN pip3 install --upgrade pip  --break-system-packages.
+RUN pip3 install s3cmd  --break-system-packages.
 
 RUN touch /var/log/cron.log
 

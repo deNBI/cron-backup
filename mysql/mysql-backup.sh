@@ -18,6 +18,8 @@ if [ ! -s "$FILE" ] || [ $(stat -c%s "$FILE") -lt $MIN_SIZE ]; then
   exit 1
 fi
 
-/notify_uptime_kuma.sh || log "Failed to send notification"
-
+# Send a notification using the notify_uptime_kuma.sh script
+if ! ./notify_uptime_kuma.sh; then
+  log "Failed to send notification"
+fi
 log "Backup completed successfully"

@@ -90,4 +90,8 @@ find "$S3_CONFIGS_PATH" -type f -name "*.cfg" | while read -r env_data; do
   rm -f "$tmp_conf"
 done
 
-/notify_uptime_kuma.sh || log "Failed to send notification"
+
+# Send a notification using the s3_notify_uptime_kuma.sh script
+if ! ./s3_notify_uptime_kuma.sh; then
+  log "Failed to send notification"
+fi

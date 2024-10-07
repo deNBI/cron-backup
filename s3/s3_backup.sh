@@ -3,7 +3,7 @@
 log() {
   echo "[$(date +"%Y-%m-%d %H:%M:%S")] - $1"
 }
-
+trap 'log "Error occurred, exiting script"; exit 1' ERR
 log "Starting backup script"
 
 basedir="/etc/backup"
@@ -89,3 +89,9 @@ find "$S3_CONFIGS_PATH" -type f -name "*.cfg" | while read -r env_data; do
   log "Removing temp config and password files"
   rm -f "$tmp_conf"
 done
+
+
+# Send a notification using the s3_notify_uptime_kuma.sh script
+if ! ./s3_notify_uptime_kuma.sh; then
+  log "Failed to send notification"
+fi

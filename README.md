@@ -30,9 +30,12 @@ base image with a shell script to prepare and run cron jobs. To use this you nee
     - S3_CONFIGS_PATH - Directory of the different site configs with variables see below (should be mounted)
     - S3_BACKUP_ROTATION_ENABLED - must to set to true to activate backup rotation in S3
     - S3_BACKUP_ROTATION_TIME_LIMIT -  expiration time in days for Backups - if rotation is enabled uploads older than this limit will be removed - (global - can be overwirtten per site.cfg)
+    - S3_KUMA_STATUS_ENDPOINT - when provided will be called after an successfull backup
 
    In addition, a cfg must be specified for each site to which the backups are to be pushed - with the following content [example](s3/configs/example.site.cfg):
+6. An Endpoint can be provided for Status Updates for [Uptime Kuma](https://github.com/louislam/uptime-kuma). Following env variables must be set:
 
+    - KUMA_STATUS_ENDPOINT -- when provided will be called after an successfull backup
 ~~~Bash
 S3_HASHDIR=DIR   #should be mounted - stores local checksum of pushed non-encrypted files (in S3 they are encrypted thus different checksum)
 S3_OBJECT_STORAGE_EP=SITE_SPECIFIC_OBJECT_STORAGE EP (e.g  openstack.cebitec.uni-bielefeld.de:8080)
@@ -52,10 +55,12 @@ Next use this image with your docker-compose.yml (here an example for a limesurv
         - ${general_PERSISTENT_PATH}backup/limesurvey:/etc/backup
       environment:
         - LIMESURVEY_DB_PASSWORD
+        - KUMA_STATUS_ENDPOINT
         - BACKUP_ROTATION_ENABLED=true
         - BACKUP_ROTATION_MAX_SIZE=10
         - BACKUP_ROTATION_CUT_SIZE=5
         - BACKUP_ROTATION_SIZE_TYPE=GiB
+        - S3_KUMA_STATUS_ENDPOINT 
         - S3_BACKUP_ENABLED=true
         - S3_PATH=limesurvey
         - S3_CONFIGS_DIR=~/configs

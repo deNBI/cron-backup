@@ -55,7 +55,7 @@ if [ ! -s "$FILE" ] || [ $(stat -c%s "$FILE") -lt $MIN_SIZE ]; then
 fi
 
 # Send a notification using the notify_uptime_kuma.sh script
-if ! ./notify_uptime_kuma.sh; then
+if ! /notify_uptime_kuma.sh; then
   log "Failed to send notification"
 fi
 

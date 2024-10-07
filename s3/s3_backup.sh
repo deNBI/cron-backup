@@ -92,6 +92,6 @@ done
 
 
 # Send a notification using the s3_notify_uptime_kuma.sh script
-if ! ./s3_notify_uptime_kuma.sh; then
+if ! /s3_notify_uptime_kuma.sh; then
   log "Failed to send notification"
 fi

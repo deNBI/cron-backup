@@ -4,7 +4,7 @@
 KUMA_STATUS_ENDPOINT=${KUMA_STATUS_ENDPOINT:-}
 
 if [ -z "$KUMA_STATUS_ENDPOINT" ]; then
-    echo "Error: KUMA_STATUS_ENDPOINT is not set. Skipping."
+    echo "INFO: KUMA_STATUS_ENDPOINT is not set. Skipping."
 else
     # Use curl to make a GET request to the status endpoint
     response=$(curl -s -X GET "$KUMA_STATUS_ENDPOINT")

@@ -4,7 +4,7 @@
 S3_KUMA_STATUS_ENDPOINT=${S3_KUMA_STATUS_ENDPOINT:-}
 
 if [ -z "$S3_KUMA_STATUS_ENDPOINT" ]; then
-    echo "Error: S3_KUMA_STATUS_ENDPOINT is not set. Skipping."
+    echo "INFO: S3_KUMA_STATUS_ENDPOINT is not set. Skipping."
 else
     # Use curl to make a POST request to the status endpoint
     response=$(curl -s -X POST \\

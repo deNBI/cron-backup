@@ -1,19 +1,18 @@
 #!/bin/bash
 
-# Set S3_KUMA_STATUS_ENDPOINT variable from environment or default to empty string
+# Set KUMA_STATUS_ENDPOINT variable from environment or default to empty string
 S3_KUMA_STATUS_ENDPOINT=${S3_KUMA_STATUS_ENDPOINT:-}
 
 if [ -z "$S3_KUMA_STATUS_ENDPOINT" ]; then
-    echo "INFO: S3_KUMA_STATUS_ENDPOINT is not set. Skipping."
+    echo "INFO: S3_KUMA_STATUS_ENDPOINTT is not set. Skipping."
 else
-    # Use curl to make a POST request to the status endpoint
-    response=$(curl -s -X POST \\
-        "$S3_KUMA_STATUS_ENDPOINT")
+    # Use curl to make a GET request to the status endpoint
+    response=$(curl -s -X GET "$S3_KUMA_STATUS_ENDPOINT")
 
     # Check if the request was successful
     if [ $? -eq 0 ]; then
         echo "Status endpoint responded successfully: $response"
     else
-        echo "Error: Failed to send status update to $S3_KUMA_STATUS_ENDPOINT. Status code: $?"
+        echo "Error: Failed to push status from $S3_KUMA_STATUS_ENDPOINT. Status code: $?"
     fi
 fi

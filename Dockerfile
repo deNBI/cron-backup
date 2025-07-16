@@ -1,4 +1,4 @@
-FROM alpine:3.22.0
+FROM alpine:3.22.1
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apk add --update --no-cache \

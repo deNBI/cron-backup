@@ -110,7 +110,9 @@ rotate_directory() {
     while [ "$CURRENT_SIZE_BYTES" -gt "$BACKUP_ROTATION_CUT_SIZE_BYTES" ]; do
       log "Cut Size $BACKUP_ROTATION_CUT_SIZE_BYTES exceeded - Current Size $CURRENT_SIZE_BYTES"
 
-      oldest_file="$dir/$(ls -t "$dir" | tail -1)"
+      oldest_file=$(find "$dir" -maxdepth 1 -type f -print0 | xargs -0 ls -t | tail -1)
+
+      log "$oldest_file"
       log "Delete oldest Backup: $oldest_file"
       rm -f "$oldest_file"
 

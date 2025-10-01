@@ -11,27 +11,22 @@ unencrypted_copy="/etc/unencrypted"
 baseEncryptDir="/etc/encrypted"
 tmp_conf="/root/tmp.cfg"
 tmp_pass="/root/pass.txt"
-
-# Create the unencrypted copy directory
-log "Clearing old unencrypted data"
-
 log "Creating unencrypted directory"
 mkdir -p "$unencrypted_copy"
-find "$unencrypted_copy/" -type f -delete
 
 log "Copy data"
 
-cp --verbose -a "$basedir/." "$unencrypted_copy"
+cp --verbose -a -u "$basedir/." "$unencrypted_copy"
 
 # Remove duplicate files
 log "Removing duplicate files"
 fdupes -qdiN -r "$unencrypted_copy"
-log "Clearing old encrypted data"
+
 
 # Create the encrypted backup directory
 log "Creating encrypted backup directory"
 mkdir -p "$baseEncryptDir"
-find "$baseEncryptDir/" -type f -delete
+
 
 # Write the encryption password to a file
 log "Writing encryption password to file"

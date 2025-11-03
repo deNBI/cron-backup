@@ -97,12 +97,19 @@ rotate_directory() {
 
   log "MaxSize: $BACKUP_ROTATION_MAX_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_MAX_SIZE_BYTES Bytes)"
   log "Cutsize: $BACKUP_ROTATION_CUT_SIZE $BACKUP_ROTATION_SIZE_TYPE ($BACKUP_ROTATION_CUT_SIZE_BYTES Bytes)"
-  # Delete old files *before* checking size limits
-  FILES_DELETED=$(find "$dir" -maxdepth 1 -type f -mtime +"$BACKUP_MAX_DATE" -delete | wc -l)
-  FILES_KEPT=$(find "$dir" -maxdepth 1 -type f -mtime -"$BACKUP_MAX_DATE" -print0 | wc -l)
+  FILES_BEFORE=$(find "$dir" -maxdepth 1 -type f  | wc -l)
 
+  # Delete old files
+  find "$dir" -maxdepth 1 -type f -mtime +"$BACKUP_MAX_DATE" -delete
+
+  # Count files after deletion
+  FILES_AFTER=$(find "$dir" -maxdepth 1 -type f  | wc -l)
+
+  # Calculate the number of deleted files
+  FILES_DELETED=$((FILES_BEFORE - FILES_AFTER))
+  
   log "Deleted $FILES_DELETED files older than $BACKUP_MAX_DATE days."
-  log "Kept $FILES_KEPT files newer than $BACKUP_MAX_DATE days."
+  log "Kept $FILES_AFTER files newer than $BACKUP_MAX_DATE days."
   CURRENT_SIZE_KBYTES=$(du -ks "$dir" | cut -f1)
   CURRENT_SIZE_BYTES=$((CURRENT_SIZE_KBYTES * 1024))
 

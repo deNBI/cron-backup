@@ -21,7 +21,7 @@ base image with a shell script to prepare and run cron jobs. To use this you nee
     * BACKUP_ROTATION_MAX_SIZE - Max Size of Backup folder (default 2)
     * BACKUP_ROTATION_CUT_SIZE - Size to which the folder will be trimmed (default 1)
     * BACKUP_ROTATION_SIZE_TYPE - Type of the Size ( default GiB - possible Types MB MiB GB GiB TB TiB)
-    * BACKUP_MAX_DATE - How old a backup is allowed to be in days (default 21 Days)
+    * BACKUP_MAX_DAYS - How old a backup is allowed to be in days (default 21 Days)
    
 
 5. This image supports pushing the backups encrypted to S3 Storage. Following env variables must be set:
@@ -62,7 +62,7 @@ Next use this image with your docker-compose.yml (here an example for a limesurv
         - BACKUP_ROTATION_MAX_SIZE=10
         - BACKUP_ROTATION_CUT_SIZE=5
         - BACKUP_ROTATION_SIZE_TYPE=GiB
-        - BACKUP_MAX_DATE=21
+        - BACKUP_MAX_DAYS=21
         - S3_KUMA_STATUS_ENDPOINT 
         - S3_BACKUP_ENABLED=true
         - S3_PATH=limesurvey

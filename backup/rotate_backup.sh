@@ -13,14 +13,14 @@ UNENCRYPTED_DIRECTORY="/etc/unencrypted"
 
 BACKUP_ROTATION_MAX_SIZE="${BACKUP_ROTATION_MAX_SIZE:=2}"
 BACKUP_ROTATION_CUT_SIZE="${BACKUP_ROTATION_CUT_SIZE:=1}"
-BACKUP_MAX_DATE="${BACKUP_MAX_DATE:=21}" # Default to 21 days
+BACKUP_MAX_DAYS="${BACKUP_MAX_DAYS:=21}" # Default to 21 days
 
 while getopts m:c:t: flag; do
   case "${flag}" in
     m) BACKUP_ROTATION_MAX_SIZE=${OPTARG} ;;
     c) BACKUP_ROTATION_CUT_SIZE=${OPTARG} ;;
     t) BACKUP_ROTATION_SIZE_TYPE=${OPTARG} ;;
-    d) BACKUP_MAX_DATE=${OPTARG} ;;
+    d) BACKUP_MAX_DAYS=${OPTARG} ;;
 
   esac
 done
@@ -100,7 +100,7 @@ rotate_directory() {
   FILES_BEFORE=$(find "$dir" -maxdepth 1 -type f  | wc -l)
 
   # Delete old files
-  find "$dir" -maxdepth 1 -type f -mtime +"$BACKUP_MAX_DATE" -delete
+  find "$dir" -maxdepth 1 -type f -mtime +"$BACKUP_MAX_DAYS" -delete
 
   # Count files after deletion
   FILES_AFTER=$(find "$dir" -maxdepth 1 -type f  | wc -l)
@@ -108,8 +108,8 @@ rotate_directory() {
   # Calculate the number of deleted files
   FILES_DELETED=$((FILES_BEFORE - FILES_AFTER))
   
-  log "Deleted $FILES_DELETED files older than $BACKUP_MAX_DATE days."
-  log "Kept $FILES_AFTER files newer than $BACKUP_MAX_DATE days."
+  log "Deleted $FILES_DELETED files older than $BACKUP_MAX_DAYS days."
+  log "Kept $FILES_AFTER files newer than $BACKUP_MAX_DAYS days."
   CURRENT_SIZE_KBYTES=$(du -ks "$dir" | cut -f1)
   CURRENT_SIZE_BYTES=$((CURRENT_SIZE_KBYTES * 1024))
 

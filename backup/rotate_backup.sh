@@ -13,7 +13,7 @@ UNENCRYPTED_DIRECTORY="/etc/unencrypted"
 
 BACKUP_ROTATION_MAX_SIZE="${BACKUP_ROTATION_MAX_SIZE:=2}"
 BACKUP_ROTATION_CUT_SIZE="${BACKUP_ROTATION_CUT_SIZE:=1}"
-BACKUP_MAX_DAYS="${BACKUP_MAX_DAYS:=21}" # Default to 21 days
+BACKUP_MAX_DAYS="${BACKUP_MAX_DAYS:=90}" # Default to 90 days
 
 while getopts m:c:t: flag; do
   case "${flag}" in

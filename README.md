@@ -21,7 +21,7 @@ base image with a shell script to prepare and run cron jobs. To use this you nee
     * BACKUP_ROTATION_MAX_SIZE - Max Size of Backup folder (default 2)
     * BACKUP_ROTATION_CUT_SIZE - Size to which the folder will be trimmed (default 1)
     * BACKUP_ROTATION_SIZE_TYPE - Type of the Size ( default GiB - possible Types MB MiB GB GiB TB TiB)
-    * BACKUP_MAX_DAYS -   Maximum age (in days) for backups. Default: 21.
+    * BACKUP_MAX_DAYS -   Maximum age (in days) for backups. Default: 90.
    
 
 5. This image supports pushing the backups encrypted to S3 Storage. Following env variables must be set:

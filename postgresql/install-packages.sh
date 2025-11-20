@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apk update && apk add --no-cache postgresql-client
+apk update && apk add --no-cache postgresql18-client
 
 echo "Installed dependencies"
 

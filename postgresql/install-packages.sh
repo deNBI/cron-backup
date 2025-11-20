@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Temporär Edge-Repositories hinzufügen (nur für PostgreSQL 18)
+echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
 apk update && apk add --no-cache postgresql18-client
 
 echo "Installed dependencies"

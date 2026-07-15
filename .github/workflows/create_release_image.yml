@@ -28,6 +28,7 @@ jobs:
         with:
           file: Dockerfile
           push: true
+          load: true
           tags: oci.bi.denbi.de/denbicloud/cron-backup:${{ steps.get_version.outputs.VERSION }}, oci.bi.denbi.de/denbicloud/cron-backup:latest
 
       - name: Generate SBOM
@@ -66,6 +67,7 @@ jobs:
           file: ${{matrix.type}}/Dockerfile
           context: ${{matrix.type}}
           push: true
+          load: true
           build-args: BASE_TAG
           tags: oci.bi.denbi.de/denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
 

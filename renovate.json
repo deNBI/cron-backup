@@ -5,7 +5,7 @@
   ],
   "packageRules": [
     {
-      "updateTypes": [
+      "matchUpdateTypes": [
         "major"
       ],
       "addLabels": [
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "updateTypes": [
+      "matchUpdateTypes": [
         "minor"
       ],
       "addLabels": [
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "updateTypes": [
+      "matchUpdateTypes": [
         "patch"
       ],
       "addLabels": [
@@ -43,7 +43,7 @@
       "security"
     ]
   },
-  "baseBranches": [
+  "baseBranchPatterns": [
     "dev"
   ],
   "reviewers": [
@@ -58,6 +58,6 @@
   "branchPrefix": "deps/",
   "bumpVersion": "minor",
   "rebaseWhen": "behind-base-branch",
-  "commitBodyTable": "true",
+  "commitBodyTable": true,
   "commitMessagePrefix": "feat(Dependencies):"
 }

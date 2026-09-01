@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:recommended",
+    "config:best-practices",
     "helpers:pinGitHubActionDigests"
   ],
   "packageRules": [
@@ -29,10 +29,11 @@
       ]
     },
     {
-      "updateTypes": [
+      "addLabels": [
         "pin"
       ],
-      "addLabels": [
+      "enabled": false,
+      "matchUpdateTypes": [
         "pin"
       ]
     }
@@ -58,6 +59,5 @@
   "bumpVersion": "minor",
   "rebaseWhen": "behind-base-branch",
   "commitBodyTable": "true",
-  "commitMessagePrefix": "feat(Dependencies):",
-  "digestUpdates": false
+  "commitMessagePrefix": "feat(Dependencies):"
 }

@@ -31,12 +31,14 @@ jobs:
           load: true
           tags: oci.bi.denbi.de/denbicloud/cron-backup:${{ steps.get_version.outputs.VERSION }}, oci.bi.denbi.de/denbicloud/cron-backup:latest
 
+      - name: Install unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
       - name: Generate SBOM
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ steps.get_version.outputs.VERSION }}
           format: spdx-json
-          output-file: cron-backup:${{ steps.get_version.outputs.VERSION }}-sbom.spdx.json     
+          output-file: ${{ github.event.repository.name }}-sbom-${{ steps.get_version.outputs.VERSION }}.spdx.json     
   special_builds:
     runs-on: ubuntu-latest
     needs: build_release
@@ -72,9 +74,11 @@ jobs:
           tags: oci.bi.denbi.de/denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
 
 
+      - name: Install unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
       - name: Generate SBOM
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}
           format: spdx-json
-          output-file: cron-backup:${{matrix.type}}-${{ steps.get_version.outputs.VERSION }}-sbom.spdx.json   
+          output-file: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.get_version.outputs.VERSION }}.spdx.json   

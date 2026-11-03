@@ -23,6 +23,9 @@ mv "${EXTRACT_DIR}/bin/"* /usr/local/bin/
 rm -rf "$EXTRACT_DIR"
 rm "$FILENAME"
 
+# Remove build-time tools to reduce attack surface and eliminate known vulnerabilities in wget
+apk del wget tar
+
 echo "Installed latest MongoDB Tools v${VERSION} successfully"
 
 # Export environment variables to container.env

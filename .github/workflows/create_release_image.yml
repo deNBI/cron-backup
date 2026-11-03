@@ -20,3 +20,33 @@ jobs:
       CUSTOM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MATRIX_ACCESS_TOKEN: ${{ secrets.MATRIX_ACCESS_TOKEN }}
       MATRIX_ROOM: ${{ secrets.MATRIX_CRITICAL_ROOM }}
+
+  special_builds:
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [ postgresql, mysql, mongodb ]
+    steps:
+      - name: Build, Scan and Publish Special Image
+        uses: denbi/portal-github-actions/build-and-scan-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ github.ref_name }}
+          dockerfile: ${{ matrix.type }}/Dockerfile
+          username: ${{ secrets.OCI_USERNAME }}
+          password: ${{ secrets.OCI_TOKEN }}
+          notify_matrix: true
+          build_args: "BASE_TAG=${{ github.ref_name }}"
+
+      - name: Publish Special Image
+        uses: denbi/portal-github-actions/publish-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ github.ref_name }}
+          sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ github.ref_name }}.spdx.json
+
+      - name: Cleanup Local Image
+        if: always()
+        uses: denbi/portal-github-actions/cleanup-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ github.ref_name }}

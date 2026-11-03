@@ -33,7 +33,7 @@ jobs:
         uses: denbi/portal-github-actions/build-and-scan-image@main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-daily
-          dockerfile: ${{ matrix.type }}/Dockerfile
+          dockerfile: Dockerfile
           context: ${{ matrix.type }}
           username: ${{ secrets.OCI_USERNAME }}
           password: ${{ secrets.OCI_TOKEN }}

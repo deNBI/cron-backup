@@ -16,3 +16,8 @@ ignore:
     package:
       name: ssl_client
       type: apk
+
+  - vulnerability: CVE-2025-60876
+    package:
+      name: busybox-extras
+      type: apk

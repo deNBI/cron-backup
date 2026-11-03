@@ -5,18 +5,19 @@ set -e
 apk update && apk add --no-cache wget tar libc6-compat
 
 # Download official MongoDB Database Tools
-# Version 106.0.0 is used here; this should be updated as newer versions are released
-VERSION="106.0.0"
-FILENAME="mongodb-database-tools-linux-x86_64-ubuntu2204-v${VERSION}.tgz"
+# Version 100.20.1 is the current stable version
+VERSION="100.20.1"
+FILENAME="mongodb-database-tools-debian13-x86_64-${VERSION}.tgz"
 URL="https://fastdl.mongodb.org/tools/db/${FILENAME}"
 
 echo "Downloading MongoDB Database Tools v${VERSION}..."
-wget -q "$URL"
+# Use -O to ensure the file is saved with the exact filename we expect
+wget -q -O "$FILENAME" "$URL"
 
 # Extract and move binaries to the path
 tar -xzf "$FILENAME"
-# The archive contains a directory named mongodb-database-tools-linux-x86_64-ubuntu2204-v${VERSION}
-EXTRACT_DIR="mongodb-database-tools-linux-x86_64-ubuntu2204-v${VERSION}"
+# The archive contains a directory named after the filename
+EXTRACT_DIR="mongodb-database-tools-debian13-x86_64-${VERSION}"
 mv "${EXTRACT_DIR}/bin/"* /usr/local/bin/
 
 # Cleanup

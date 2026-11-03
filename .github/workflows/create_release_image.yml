@@ -34,7 +34,7 @@ jobs:
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ github.ref_name }}
           dockerfile: ${{ matrix.type }}/Dockerfile
-          context: .
+          context: ${{ matrix.type }}
           username: ${{ secrets.OCI_DENBI_USERNAME }}
           password: ${{ secrets.OCI_DENBI_TOKEN }}
           notify_matrix: true

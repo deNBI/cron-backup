@@ -17,6 +17,42 @@ jobs:
       CUSTOM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   special_builds:
+    needs: publish
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [postgresql, mysql, mongodb]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Extract branch name
+        shell: bash
+        run: echo "tag=$(echo ${GITHUB_REF#refs/heads/} | sed 's|/|-|g')" >> $GITHUB_OUTPUT
+        id: branch_tag
+
+      - name: Build and Scan Special Image
+        uses: denbi/portal-github-actions/build-and-scan-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
+          dockerfile: ${{ matrix.type }}/Dockerfile
+          username: ${{ secrets.OCI_USERNAME }}
+          password: ${{ secrets.OCI_TOKEN }}
+          notify_matrix: false
+          build_args: "BASE_TAG=${{ steps.branch_tag.outputs.tag }}"
+
+      - name: Publish Special Image
+        uses: denbi/portal-github-actions/publish-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
+          sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.branch_tag.outputs.tag }}.spdx.json
+
+      - name: Cleanup Local Image
+        if: always()
+        uses: denbi/portal-github-actions/cleanup-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
+
+  special_builds:
       runs-on: ubuntu-latest
       needs: build
       strategy:

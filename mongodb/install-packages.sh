@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-
 # Install base tools and compatibility layer for glibc binaries on Alpine
 apk update && apk add --no-cache wget tar libc6-compat
 
@@ -27,6 +26,5 @@ rm "$FILENAME"
 echo "Installed latest MongoDB Tools v${VERSION} successfully"
 
 # Export environment variables to container.env
-declare -p | grep -E 'MONGODB_DB|MONGODB_HOST|MONGODB_USER|MONGODB_PASSWORD' >>/container.env
-
+declare -p | grep -E 'MONGODB_DB|MONGODB_HOST|MONGODB_USER|MONGODB_PASSWORD' > /container.env || true
 echo "Environment was set"

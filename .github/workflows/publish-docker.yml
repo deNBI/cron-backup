@@ -12,8 +12,8 @@ jobs:
       dockerfile: Dockerfile
       RUNS_ON: '["ubuntu-latest"]'
     secrets:
-      OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
-      OCI_TOKEN: ${{ secrets.OCI_TOKEN }}
+      OCI_USERNAME: ${{ secrets.OCI_DENBI_USERNAME }}
+      OCI_TOKEN: ${{ secrets.OCI_DENBI_TOKEN }}
       CUSTOM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   special_builds:
@@ -35,8 +35,8 @@ jobs:
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
           dockerfile: ${{ matrix.type }}/Dockerfile
-          username: ${{ secrets.OCI_USERNAME }}
-          password: ${{ secrets.OCI_TOKEN }}
+          username: ${{ secrets.OCI_DENBI_USERNAME }}
+          password: ${{ secrets.OCI_DENBI_TOKEN }}
           notify_matrix: false
           build_args: "BASE_TAG=${{ steps.branch_tag.outputs.tag }}"
 
@@ -45,8 +45,8 @@ jobs:
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
           sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.branch_tag.outputs.tag }}.spdx.json
-          OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
-          OCI_TOKEN: ${{ secrets.OCI_TOKEN }}
+          OCI_USERNAME: ${{ secrets.OCI_DENBI_USERNAME }}
+          OCI_TOKEN: ${{ secrets.OCI_DENBI_TOKEN }}
           CUSTOM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Cleanup Local Image

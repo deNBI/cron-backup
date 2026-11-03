@@ -46,9 +46,6 @@ jobs:
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
           sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.branch_tag.outputs.tag }}.spdx.json
-          OCI_USERNAME: ${{ secrets.OCI_DENBI_USERNAME }}
-          OCI_TOKEN: ${{ secrets.OCI_DENBI_TOKEN }}
-          CUSTOM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Cleanup Local Image
         if: always()

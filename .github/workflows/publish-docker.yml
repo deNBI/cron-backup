@@ -34,7 +34,7 @@ jobs:
         uses: denbi/portal-github-actions/build-and-scan-image@main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
-          dockerfile: Dockerfile
+          dockerfile: ${{ matrix.type }}/Dockerfile
           context: ${{ matrix.type }}
           username: ${{ secrets.OCI_DENBI_USERNAME }}
           password: ${{ secrets.OCI_DENBI_TOKEN }}

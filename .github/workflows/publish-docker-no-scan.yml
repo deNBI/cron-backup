@@ -1,0 +1,65 @@
+name: Publish Docker (No Scan)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+
+# ⚠️ NO-SCAN BYPASS ⚠️
+# Sister workflow of publish-docker.yml that SKIPS the Grype image scan for both
+# the main image and the per-DB (postgresql/mysql/mongodb) special images.
+# Use this when the scan would fail (image deemed "not safe") but you still
+# need the branch images in the registry to test them. It builds and publishes
+# the SAME image:tags as the scanned workflow, so it overwrites any previously
+# published images for that branch.
+#
+# It does NOT run the Grype scan and does NOT notify Matrix. Do not use this
+# for production releases - use publish-docker.yml / create_release_image.yml
+# for those.
+jobs:
+  publish:
+    uses: denbi/portal-github-actions/.github/workflows/publish-branch-image-no-scan.yml@main
+    with:
+      image_name: oci.bi.denbi.de/denbicloud/cron-backup
+      dockerfile: Dockerfile
+      runs_on: '["ubuntu-latest"]'
+    secrets:
+      OCI_USERNAME: ${{ secrets.OCI_DENBI_USERNAME }}
+      OCI_TOKEN: ${{ secrets.OCI_DENBI_TOKEN }}
+
+  special_builds:
+    needs: publish
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [postgresql, mysql, mongodb]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Extract branch name
+        shell: bash
+        run: echo "tag=$(echo ${GITHUB_REF#refs/heads/} | sed 's|/|-|g')" >> $GITHUB_OUTPUT
+        id: branch_tag
+
+      # No-scan: build only (build-image) instead of build-and-scan-image.
+      - name: Build Special Image (No Scan)
+        uses: denbi/portal-github-actions/build-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
+          dockerfile: ${{ matrix.type }}/Dockerfile
+          context: ${{ matrix.type }}
+          username: ${{ secrets.OCI_DENBI_USERNAME }}
+          password: ${{ secrets.OCI_DENBI_TOKEN }}
+          build_args: "BASE_TAG=${{ steps.branch_tag.outputs.tag }}"
+
+      - name: Publish Special Image
+        uses: denbi/portal-github-actions/publish-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
+          sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.branch_tag.outputs.tag }}.spdx.json
+
+      - name: Cleanup Local Image
+        if: always()
+        uses: denbi/portal-github-actions/cleanup-image@main
+        with:
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}

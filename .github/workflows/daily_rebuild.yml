@@ -35,8 +35,8 @@ jobs:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-daily
           dockerfile: ${{ matrix.type }}/Dockerfile
           context: ${{ matrix.type }}
-          username: ${{ secrets.OCI_USERNAME }}
-          password: ${{ secrets.OCI_TOKEN }}
+          username: ${{ secrets.OCI_DENBI_USERNAME }}
+          password: ${{ secrets.OCI_DENBI_TOKEN }}
           notify_matrix: false
           build_args: "BASE_TAG=latest"
 

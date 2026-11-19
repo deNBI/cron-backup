@@ -224,3 +224,25 @@ ignore:
       cron/backup workloads in this image.
       No vendor fix available: patch not yet in Alpine 3.24.
       Next review date: 2028-02-08
+
+  # GO-2026-6859 (CVE-2026-97054): Go stdlib HTTP/1 server MaxBytesReader
+  # race - "Connection: close" header set without synchronization can crash
+  # an HTTP/1 server that reads the request body concurrently with writing
+  # the response header. Affects the Go-compiled MongoDB Database Tools
+  # (mongodump et al., Go 1.27.3) in the mongodb special build.
+  - vulnerability: GO-2026-6859
+    package:
+      name: stdlib
+      type: go-module
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: the vulnerability requires an HTTP/1 server using
+      MaxBytesReader/MaxBytesHandler whose handler reads the request body
+      concurrently with writing the response header. mongodump (and the
+      other MongoDB Database Tools) are client tools that connect to MongoDB
+      over the wire protocol; they do not run an HTTP server and do not use
+      MaxBytesReader, so the race condition cannot be triggered.
+      No vendor fix available: fix ships in Go 1.27.4 / 1.26.11; MongoDB
+      Database Tools 100.20.1 is compiled with Go 1.27.3 and a patched tool
+      release is not yet available.
+      Next review date: 2028-02-08

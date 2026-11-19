@@ -32,22 +32,22 @@ jobs:
       - name: Build and Scan Special Image
         uses: denbi/portal-github-actions/build-and-scan-image@main
         with:
-          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-daily
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}
           dockerfile: ${{ matrix.type }}/Dockerfile
           context: ${{ matrix.type }}
           username: ${{ secrets.OCI_DENBI_USERNAME }}
           password: ${{ secrets.OCI_DENBI_TOKEN }}
           notify_matrix: false
-          build_args: "BASE_TAG=latest"
+          build_args: "BASE_TAG=${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}"
 
       - name: Publish Special Image
         uses: denbi/portal-github-actions/publish-image@main
         with:
-          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-daily
-          sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-daily-sbom.spdx.json
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}
+          sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}-sbom.spdx.json
 
       - name: Cleanup Local Image
         if: always()
         uses: denbi/portal-github-actions/cleanup-image@main
         with:
-          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-daily
+          image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}

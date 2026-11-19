@@ -63,6 +63,7 @@ jobs:
           fail_on_findings: ${{ github.event_name == 'workflow_dispatch' && inputs.fail_on_findings || github.event_name != 'workflow_dispatch' }}
           build_args: "BASE_TAG=${{ steps.branch_tag.outputs.tag }}"
 
+
       - name: Publish Special Image
         uses: denbi/portal-github-actions/publish-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
         with:

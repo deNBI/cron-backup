@@ -6,7 +6,7 @@ on:
 
 jobs:
   rebuild_and_scan:
-    uses: denbi/portal-github-actions/.github/workflows/release-image.yml@02ae1f46b32e057557da1e90ec0e4c28b7c3754d # main
+    uses: denbi/portal-github-actions/.github/workflows/release-image.yml@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
     with:
       image_name: oci.bi.denbi.de/denbicloud/cron-backup
       dockerfile: Dockerfile
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Build and Scan Special Image
-        uses: denbi/portal-github-actions/build-and-scan-image@02ae1f46b32e057557da1e90ec0e4c28b7c3754d # main
+        uses: denbi/portal-github-actions/build-and-scan-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}
           dockerfile: ${{ matrix.type }}/Dockerfile
@@ -41,13 +41,13 @@ jobs:
           build_args: "BASE_TAG=${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}"
 
       - name: Publish Special Image
-        uses: denbi/portal-github-actions/publish-image@02ae1f46b32e057557da1e90ec0e4c28b7c3754d # main
+        uses: denbi/portal-github-actions/publish-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}
           sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}-sbom.spdx.json
 
       - name: Cleanup Local Image
         if: always()
-        uses: denbi/portal-github-actions/cleanup-image@02ae1f46b32e057557da1e90ec0e4c28b7c3754d # main
+        uses: denbi/portal-github-actions/cleanup-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ needs.rebuild_and_scan.outputs.IMAGE_TAG }}

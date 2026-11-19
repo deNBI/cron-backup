@@ -26,7 +26,7 @@ on:
 # for those (which keeps the strict behavior).
 jobs:
   publish:
-    uses: denbi/portal-github-actions/.github/workflows/publish-branch-image.yml@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
+    uses: denbi/portal-github-actions/.github/workflows/publish-branch-image.yml@cde0c5ca381c286ba7a452378e0118fc3dfa3022 # main
     with:
       image_name: oci.bi.denbi.de/denbicloud/cron-backup
       dockerfile: Dockerfile
@@ -52,7 +52,7 @@ jobs:
         id: branch_tag
 
       - name: Build and Scan Special Image
-        uses: denbi/portal-github-actions/build-and-scan-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
+        uses: denbi/portal-github-actions/build-and-scan-image@cde0c5ca381c286ba7a452378e0118fc3dfa3022 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
           dockerfile: ${{ matrix.type }}/Dockerfile
@@ -65,13 +65,13 @@ jobs:
 
 
       - name: Publish Special Image
-        uses: denbi/portal-github-actions/publish-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
+        uses: denbi/portal-github-actions/publish-image@cde0c5ca381c286ba7a452378e0118fc3dfa3022 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}
           sbom_filename: ${{ github.event.repository.name }}-${{ matrix.type }}-sbom-${{ steps.branch_tag.outputs.tag }}.spdx.json
 
       - name: Cleanup Local Image
         if: always()
-        uses: denbi/portal-github-actions/cleanup-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
+        uses: denbi/portal-github-actions/cleanup-image@cde0c5ca381c286ba7a452378e0118fc3dfa3022 # main
         with:
           image: oci.bi.denbi.de/denbicloud/cron-backup:${{ matrix.type }}-${{ steps.branch_tag.outputs.tag }}

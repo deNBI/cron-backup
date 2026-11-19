@@ -31,7 +31,7 @@ jobs:
       image_name: oci.bi.denbi.de/denbicloud/cron-backup
       dockerfile: Dockerfile
       runs_on: '["ubuntu-latest"]'
-      fail_on_findings: ${{ github.event_name == 'workflow_dispatch' ? inputs.fail_on_findings : true }}
+      fail_on_findings: ${{ inputs.fail_on_findings != false }}
     secrets:
       OCI_USERNAME: ${{ secrets.OCI_DENBI_USERNAME }}
       OCI_TOKEN: ${{ secrets.OCI_DENBI_TOKEN }}
@@ -60,8 +60,9 @@ jobs:
           username: ${{ secrets.OCI_DENBI_USERNAME }}
           password: ${{ secrets.OCI_DENBI_TOKEN }}
           notify_matrix: false
-          fail_on_findings: ${{ github.event_name == 'workflow_dispatch' ? inputs.fail_on_findings : true }}
+          fail_on_findings: ${{ inputs.fail_on_findings != false }}
           build_args: "BASE_TAG=${{ steps.branch_tag.outputs.tag }}"
+
 
       - name: Publish Special Image
         uses: denbi/portal-github-actions/publish-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main

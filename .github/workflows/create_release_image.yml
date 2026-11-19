@@ -21,8 +21,28 @@ jobs:
       MATRIX_ACCESS_TOKEN: ${{ secrets.MATRIX_ACCESS_TOKEN }}
       MATRIX_ROOM: ${{ secrets.MATRIX_CRITICAL_ROOM }}
 
-  special_builds:
+  tag_latest:
     needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Login to OCI Registry
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4
+        with:
+          registry: oci.bi.denbi.de
+          username: ${{ secrets.OCI_DENBI_USERNAME }}
+          password: ${{ secrets.OCI_DENBI_TOKEN }}
+      - name: Tag and Push Latest
+        shell: bash
+        run: |
+          TAG="${{ needs.release.outputs.IMAGE_TAG }}"
+          echo "Tagging cron-backup:${TAG} as latest"
+          docker pull oci.bi.denbi.de/denbicloud/cron-backup:${TAG}
+          docker tag  oci.bi.denbi.de/denbicloud/cron-backup:${TAG} oci.bi.denbi.de/denbicloud/cron-backup:latest
+          docker push oci.bi.denbi.de/denbicloud/cron-backup:latest
+
+  special_builds:
+    needs: [ release, tag_latest ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

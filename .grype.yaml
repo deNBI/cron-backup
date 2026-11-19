@@ -1,23 +1,226 @@
 ignore:
   # CVE-2025-60876 affects BusyBox wget URL handling.
-  # The Node application does not use BusyBox wget with untrusted URLs.
+  # The cron-backup application does not use BusyBox wget with untrusted URLs.
   # Revisit when Alpine publishes a patched BusyBox package.
   - vulnerability: CVE-2025-60876
     package:
       name: busybox
       type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: BusyBox wget is not used with untrusted URLs in this
+      container (curl is used for HTTP, BusyBox wget is not invoked by the
+      backup scripts).
+      Next review date: 2027-01-31
 
   - vulnerability: CVE-2025-60876
     package:
       name: busybox-binsh
       type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: BusyBox wget is not used with untrusted URLs in this
+      container (curl is used for HTTP, BusyBox wget is not invoked by the
+      backup scripts).
+      Next review date: 2027-01-31
 
   - vulnerability: CVE-2025-60876
     package:
       name: ssl_client
       type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: BusyBox wget is not used with untrusted URLs in this
+      container (curl is used for HTTP, BusyBox wget is not invoked by the
+      backup scripts).
+      Next review date: 2027-01-31
 
   - vulnerability: CVE-2025-60876
     package:
       name: busybox-extras
       type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: BusyBox wget is not used with untrusted URLs in this
+      container (curl is used for HTTP, BusyBox wget is not invoked by the
+      backup scripts).
+      Next review date: 2027-01-31
+
+  # CVE-2026-119170: python3 hashlib FIPS enforcement regression (Python 3.14.10 only).
+  # Only users running OpenSSL in FIPS mode are affected. cron-backup does not
+  # enable FIPS mode (no [fips_sect] in /etc/ssl/openssl.cnf, no fipsmodule.cnf).
+  - vulnerability: CVE-2026-119170
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 3 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: the regression affects FIPS algorithm enforcement in the
+      hashlib module, and only applies when OpenSSL runs in FIPS mode, which is
+      not configured in this image (no FIPS provider, no FIPS mode).
+      No vendor fix available: fix (CPython 3.14.11) not yet in Alpine 3.24.
+      Next review date: 2026-12-16
+
+  # CVE-2026-95692: OpenSSL AES-GCM-SIV out-of-bounds read when a caller passes
+  # a non-standard IV length to EVP_CipherInit_ex(). cron-backup only uses
+  # OpenSSL through TLS client paths (curl, s3cmd/urllib3) with the standard
+  # 12-byte IV and does not call EVP_CipherInit_ex() directly.
+  - vulnerability: CVE-2026-95692
+    package:
+      name: libcrypto3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image uses AES-GCM-SIV via
+      EVP_CipherInit_ex; TLS uses standard AES-GCM (not SIV).
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  - vulnerability: CVE-2026-95692
+    package:
+      name: libssl3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image uses AES-GCM-SIV via
+      EVP_CipherInit_ex; TLS uses standard AES-GCM (not SIV).
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-107496: OpenSSL CMS_encrypt()/CMS_encrypt_ex() infinite loop when
+  # encrypting to an EC certificate with group order 1. cron-backup does not
+  # perform CMS encryption.
+  - vulnerability: CVE-2026-107496
+    package:
+      name: libcrypto3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image calls CMS_encrypt() or
+      CMS_encrypt_ex(); the image does not perform S/MIME or CMS-based
+      operations.
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  - vulnerability: CVE-2026-107496
+    package:
+      name: libssl3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image calls CMS_encrypt() or
+      CMS_encrypt_ex(); the image does not perform S/MIME or CMS-based
+      operations.
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-88823: OpenSSL AES-GCM-SIV treats a zero-length AAD update as a
+  # reset of all previously supplied AAD, allowing AAD forgery. cron-backup
+  # does not use AES-GCM-SIV with chunked AAD.
+  - vulnerability: CVE-2026-88823
+    package:
+      name: libcrypto3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image uses AES-GCM-SIV with chunked
+      (zero-length incremental) AAD; TLS uses standard AES-GCM (not SIV).
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  - vulnerability: CVE-2026-88823
+    package:
+      name: libssl3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image uses AES-GCM-SIV with chunked
+      (zero-length incremental) AAD; TLS uses standard AES-GCM (not SIV).
+      No vendor fix available: fix (OpenSSL 3.5.10) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-124249: CPython http.cookiejar.CookieJar deleted stored cookies
+  # from other domains when a response carried an expired Set-Cookie header,
+  # without consulting the cookie policy. cron-backup does not use
+  # http.cookiejar or urllib's HTTPCookieProcessor for HTTP requests.
+  - vulnerability: CVE-2026-124249
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: this image uses s3cmd (requests/urllib3) for HTTP calls,
+      not the stdlib http.cookiejar / urllib HTTPCookieProcessor.
+      No vendor fix available: fix (CPython 3.16.0) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-115559: CPython imaplib IMAP4.starttls() leaves the read-ahead
+  # buffer untouched, allowing a network attacker to inject forged IMAP
+  # responses after the TLS handshake. cron-backup does not use imaplib at all.
+  - vulnerability: CVE-2026-115559
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: this image does not use imaplib at all (no IMAP client).
+      No vendor fix available: fix (CPython 3.16.0) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-19552: CPython ssl.get_server_certificate() verifies the chain but
+  # not the certificate identity when ca_certs is supplied. cron-backup does
+  # not call ssl.get_server_certificate().
+  - vulnerability: CVE-2026-19552
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: no code in this image calls ssl.get_server_certificate().
+      Negligible severity (CVSS 0.0, no impact).
+      No vendor fix available: fix (CPython 3.16.0) not yet in Alpine 3.24.
+      Next review date: 2027-02-16
+
+  # CVE-2026-13346: pip incorrectly handles doubly-encoded package URLs from
+  # indexes, allowing arbitrary file placement when installing wheels.
+  # Requires pip download --only-binary from a malicious index.
+  - vulnerability: CVE-2026-13346
+    package:
+      name: py3-pip
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: pip is only used at build time (pip3 install s3cmd) from
+      the trusted PyPI index, not at runtime. No pip download is executed in
+      this container.
+      No vendor fix available: fix (pip 26.2.0) not yet in Alpine 3.24
+      (py3-pip 26.1.2-r0 is the latest).
+      Next review date: 2028-02-08
+
+  # CVE-2026-115791: CPython tarfile/zipfile/gzip CLI shadowing - a Python
+  # script shadowing the stdlib can be executed when decompressing an archive
+  # with an error. Requires python -m tarfile/zipfile/gzip on untrusted data.
+  - vulnerability: CVE-2026-115791
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Not reachable: this image does not invoke the tarfile/zipfile/gzip CLI
+      to decompress untrusted archives; Python is only used by s3cmd for S3
+      operations.
+      No vendor fix available: fix (CPython 3.16.0) not yet in Alpine 3.24.
+      Next review date: 2028-02-08
+
+  # CVE-2026-16052: Low-severity CPython finding, no CVSS score assigned.
+  - vulnerability: CVE-2026-16052
+    package:
+      name: python3
+      type: apk
+    reason: >
+      Tier 4 - risk accepted, ref guidelines/security/accepted-risks.md.
+      Low risk: low-severity finding in a transitive dependency (system
+      python3 3.14.10-r1); the affected code path is not exercised by the
+      cron/backup workloads in this image.
+      No vendor fix available: patch not yet in Alpine 3.24.
+      Next review date: 2028-02-08

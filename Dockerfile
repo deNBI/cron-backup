@@ -9,7 +9,8 @@ RUN apk add --update --no-cache \
     py3-pip \
     curl \
     busybox-extras \
-    ssmtp
+    ssmtp \
+    && apk upgrade --no-cache
 
 RUN pip3 install --upgrade pip  --break-system-packages
 RUN pip3 install s3cmd  --break-system-packages

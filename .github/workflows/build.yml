@@ -14,7 +14,7 @@ jobs:
             - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Build and Scan Image
-              uses: denbi/portal-github-actions/build-and-scan-image@90b66e053fd875b069e6da8e97ea3a2a54bcc2e4 # main
+              uses: denbi/portal-github-actions/build-and-scan-image@cde0c5ca381c286ba7a452378e0118fc3dfa3022 # main
               with:
                 image: localbuild/base-cron:${{ github.sha }}
                 dockerfile: Dockerfile
